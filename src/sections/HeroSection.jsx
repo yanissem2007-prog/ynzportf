@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowDown } from 'lucide-react';
+import heroCodeImage from '../assets/hero-code.png';
 
 const containerVariants = {
   hidden: {},
@@ -36,7 +37,7 @@ export default function HeroSection() {
   }, []);
 
   const scrollToWork = () => {
-    document.getElementById('work')?.scrollIntoView({ behavior: 'smooth' });
+    document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' });
   };
 
   const scrollToContact = () => {
@@ -163,14 +164,15 @@ export default function HeroSection() {
               <div className="relative aspect-[3/4] photo-placeholder border border-white/5 overflow-hidden"
                 style={{ transform: 'translate(calc(var(--mx) * 0.3), calc(var(--my) * 0.3))' }}
               >
-                {/* Replace with <img src="/src/assets/hero-photo.jpg" ... /> */}
-                <div className="absolute inset-0 flex flex-col items-center justify-center gap-2">
-                  <span className="font-display text-7xl text-white/5">Y</span>
-                  <span className="font-mono text-xs text-white/10 tracking-widest">HERO PHOTO</span>
-                  <span className="font-mono text-[10px] text-white/5">hero-photo.jpg</span>
-                </div>
+                <img
+                  src={heroCodeImage}
+                  alt="Code editor screenshot showcasing a contact form implementation"
+                  className="absolute inset-0 h-full w-full object-cover object-left-top scale-[1.42] brightness-90 contrast-125 saturate-[0.75]"
+                  draggable="false"
+                />
                 {/* Overlay */}
                 <div className="absolute inset-0 bg-gradient-to-t from-void/80 via-transparent to-void/20" />
+                <div className="absolute inset-0 bg-gradient-to-br from-gold/10 via-transparent to-transparent mix-blend-screen" />
                 <div className="absolute bottom-4 left-4 right-4">
                   <p className="font-mono text-[10px] text-gold/60 tracking-widest">
                     YANIS / 18 / ALGIERS

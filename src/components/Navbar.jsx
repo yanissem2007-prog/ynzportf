@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { contact } from '../data';
 
 const navLinks = [
   { label: 'Home', href: '#hero', num: '01' },
   { label: 'About', href: '#about', num: '02' },
-  { label: 'Work', href: '#work', num: '03' },
+  { label: 'Work', href: '#projects', num: '03' },
   { label: 'Skills', href: '#skills', num: '04' },
   { label: 'Contact', href: '#contact', num: '05' },
 ];
@@ -13,7 +13,6 @@ const navLinks = [
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState('hero');
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 60);
@@ -29,7 +28,6 @@ export default function Navbar() {
 
   return (
     <>
-      {/* Desktop nav */}
       <motion.nav
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -39,20 +37,20 @@ export default function Navbar() {
         }`}
       >
         <div className="max-w-7xl mx-auto px-6 md:px-12 flex items-center justify-between">
-          {/* Logo */}
           <button
             onClick={() => scrollTo('#hero')}
             className="group flex items-center gap-3"
           >
             <span className="w-7 h-7 border border-gold/40 flex items-center justify-center rounded-sm group-hover:border-gold group-hover:bg-gold/10 transition-all duration-300">
-              <span className="font-display text-gold text-sm leading-none">Y</span>
+              <span className="font-display text-gold text-sm leading-none">
+                Y
+              </span>
             </span>
             <span className="font-display text-pearl tracking-widest text-sm hidden sm:block">
               YANIS
             </span>
           </button>
 
-          {/* Desktop links */}
           <div className="hidden md:flex items-center gap-8">
             {navLinks.map((link) => (
               <button
@@ -71,7 +69,6 @@ export default function Navbar() {
             ))}
           </div>
 
-          {/* CTA */}
           <div className="hidden md:block">
             <button
               onClick={() => scrollTo('#contact')}
@@ -84,7 +81,6 @@ export default function Navbar() {
             </button>
           </div>
 
-          {/* Mobile menu trigger */}
           <button
             onClick={() => setMenuOpen(!menuOpen)}
             className="md:hidden flex flex-col gap-1.5 group"
@@ -106,7 +102,6 @@ export default function Navbar() {
         </div>
       </motion.nav>
 
-      {/* Mobile Menu Overlay */}
       <AnimatePresence>
         {menuOpen && (
           <motion.div
@@ -117,16 +112,15 @@ export default function Navbar() {
             transition={{ duration: 0.3 }}
             className="fixed inset-0 z-40 bg-obsidian/95 backdrop-blur-xl flex flex-col"
           >
-            {/* Background decor */}
             <div className="absolute bottom-0 right-0 w-80 h-80 rounded-full bg-gold/3 blur-3xl" />
 
             <div className="flex flex-col justify-center h-full px-8 pt-20">
-              {navLinks.map((link, i) => (
+              {navLinks.map((link, index) => (
                 <motion.button
                   key={link.label}
                   initial={{ x: -60, opacity: 0 }}
                   animate={{ x: 0, opacity: 1 }}
-                  transition={{ delay: i * 0.07, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                  transition={{ delay: index * 0.07, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
                   onClick={() => scrollTo(link.href)}
                   className="group flex items-center gap-4 py-5 border-b border-white/5 text-left"
                 >
@@ -143,10 +137,20 @@ export default function Navbar() {
                 transition={{ delay: 0.5 }}
                 className="flex gap-6 mt-10"
               >
-                <a href={contact.instagram} target="_blank" rel="noreferrer" className="font-mono text-xs text-silver/40 hover:text-gold transition-colors tracking-widest">
+                <a
+                  href={contact.instagram}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="font-mono text-xs text-silver/40 hover:text-gold transition-colors tracking-widest"
+                >
                   INSTAGRAM
                 </a>
-                <a href={contact.github} target="_blank" rel="noreferrer" className="font-mono text-xs text-silver/40 hover:text-gold transition-colors tracking-widest">
+                <a
+                  href={contact.github}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="font-mono text-xs text-silver/40 hover:text-gold transition-colors tracking-widest"
+                >
                   GITHUB
                 </a>
               </motion.div>

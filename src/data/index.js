@@ -1,63 +1,39 @@
 export const projects = [
   {
     id: 1,
-    title: "Onyx Restaurant",
-    category: "Web Design & Dev",
-    description: "A premium digital experience for a fine dining concept — dark editorial aesthetic, cinematic imagery and silky smooth interactions.",
-    stack: ["React", "Framer Motion", "Tailwind CSS"],
-    year: "2024",
+    title: "The Lincoln Group",
+    category: "Luxury Real Estate",
+    description: "A refined real estate experience built around cinematic property visuals, elegant typography and a premium investment-first presentation.",
+    stack: ["React", "Vite", "Tailwind CSS"],
+    year: "2026",
     color: "#c9a96e",
-    index: "01"
+    index: "01",
+    link: "https://lincolin-group.vercel.app/",
+    image: "/projects/lincoln-group.png"
   },
   {
     id: 2,
-    title: "Atelier UI Kit",
-    category: "UI/UX Design",
-    description: "A meticulously crafted component library built for modern digital products. Clean, modular and production-ready.",
-    stack: ["Figma", "React", "CSS Variables"],
-    year: "2024",
-    color: "#a8b5c4",
-    index: "02"
+    title: "Zodiac Cuisine",
+    category: "Bespoke Interiors",
+    description: "A premium showroom website for custom kitchens and dressing spaces, pairing warm editorial imagery with a polished luxury brand feel.",
+    stack: ["React", "Vite", "Tailwind CSS"],
+    year: "2026",
+    color: "#d5b98f",
+    index: "02",
+    link: "https://kodiac-snowy.vercel.app/",
+    image: "/projects/zodiac-cuisine.png"
   },
   {
     id: 3,
-    title: "Vertex Trading Dashboard",
-    category: "Full Stack",
-    description: "A full stack swing trading tracker with real-time chart overlays, journal entries and performance analytics.",
-    stack: ["React", "Node.js", "Chart.js", "MongoDB"],
-    year: "2024",
-    color: "#8b9e6e",
-    index: "03"
-  },
-  {
-    id: 4,
-    title: "Motion Studio",
-    category: "Creative Dev",
-    description: "An interactive portfolio concept built as an experiment in scroll-based storytelling and generative motion.",
-    stack: ["React", "GSAP", "Three.js"],
-    year: "2024",
-    color: "#c4a8b5",
-    index: "04"
-  },
-  {
-    id: 5,
-    title: "Lumière Brand Site",
-    category: "Web Development",
-    description: "Full branding and web presence for a luxury creative agency — editorial layouts, custom cursor and premium UX.",
-    stack: ["React", "Framer Motion", "Sanity CMS"],
-    year: "2025",
-    color: "#c9a96e",
-    index: "05"
-  },
-  {
-    id: 6,
-    title: "Commerce OS",
-    category: "Full Stack",
-    description: "A modern e-commerce back-office system with inventory management, order tracking and analytics in a minimal UI.",
-    stack: ["React", "Express", "PostgreSQL"],
-    year: "2025",
-    color: "#a8b5c4",
-    index: "06"
+    title: "Nexdell AI",
+    category: "AI Automation Agency",
+    description: "A dark, conversion-focused landing page crafted to showcase intelligent workflows, performance gains and premium automation services.",
+    stack: ["React", "Vite", "Tailwind CSS"],
+    year: "2026",
+    color: "#6f8bff",
+    index: "03",
+    link: "https://nextdel-tau.vercel.app/",
+    image: "/projects/nexdell-ai.png"
   }
 ];
 

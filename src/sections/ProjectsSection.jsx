@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
 import { projects } from '../data';
 
@@ -7,31 +7,32 @@ function ProjectCard({ project, index }) {
   const [hovered, setHovered] = useState(false);
 
   return (
-    <motion.div
+    <motion.a
       initial={{ opacity: 0, y: 50 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ delay: index * 0.1, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
       onHoverStart={() => setHovered(true)}
       onHoverEnd={() => setHovered(false)}
-      className="group relative cursor-default"
+      href={project.link}
+      target="_blank"
+      rel="noreferrer"
+      aria-label={`Visit ${project.title}`}
+      className="group relative block"
       data-hover
     >
-      {/* Image */}
-      <div className="relative overflow-hidden aspect-[16/10] photo-placeholder border border-white/5 mb-5">
-        {/* Replace with actual project images */}
-        <div className="absolute inset-0 flex items-center justify-center">
-          <span className="font-display text-[6rem] leading-none"
-            style={{ color: project.color + '08' }}>
-            {project.index}
-          </span>
-        </div>
+      <div className="relative overflow-hidden aspect-[16/10] border border-white/5 mb-5 bg-void">
+        <img
+          src={project.image}
+          alt={`${project.title} preview`}
+          className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent opacity-90" />
         <div
           className="absolute inset-0 transition-opacity duration-700"
-          style={{ background: `linear-gradient(135deg, ${project.color}08 0%, transparent 70%)` }}
+          style={{ background: `linear-gradient(135deg, ${project.color}30 0%, transparent 70%)` }}
         />
 
-        {/* Hover overlay */}
         <motion.div
           className="absolute inset-0 flex items-center justify-center"
           animate={{ opacity: hovered ? 1 : 0 }}
@@ -42,26 +43,35 @@ function ProjectCard({ project, index }) {
             <div className="w-12 h-12 border border-gold/60 rounded-full flex items-center justify-center">
               <ArrowUpRight size={18} className="text-gold" />
             </div>
-            <span className="font-mono text-[10px] text-gold/60 tracking-widest">VIEW PROJECT</span>
+            <span className="font-mono text-[10px] text-gold/60 tracking-widest">VISIT SITE</span>
           </div>
         </motion.div>
 
-        {/* Category badge */}
         <div className="absolute top-4 left-4">
-          <span className="font-mono text-[9px] tracking-widest text-silver/40 bg-void/60 backdrop-blur-sm px-2 py-1 border border-white/5">
+          <span className="font-mono text-[9px] tracking-widest text-silver/70 bg-void/65 backdrop-blur-sm px-2 py-1 border border-white/10">
             {project.category}
+          </span>
+        </div>
+
+        <div className="absolute top-4 right-4">
+          <span className="font-mono text-[9px] tracking-[0.3em] text-pearl/80 bg-black/30 backdrop-blur-sm px-2 py-1 border border-white/10">
+            {project.year}
+          </span>
+        </div>
+
+        <div className="absolute bottom-4 left-4">
+          <span className="font-mono text-xs text-pearl/70">
+            {project.index}
           </span>
         </div>
       </div>
 
-      {/* Info */}
       <div className="flex items-start justify-between">
         <div>
-          <p className="font-mono text-xs text-gold/40 mb-1">{project.index}</p>
           <h3 className="font-display text-2xl md:text-3xl text-pearl group-hover:text-gold transition-colors duration-300">
             {project.title}
           </h3>
-          <p className="font-body text-xs text-silver/40 mt-2 leading-relaxed max-w-xs">
+          <p className="font-body text-xs text-silver/40 mt-2 leading-relaxed max-w-sm">
             {project.description}
           </p>
         </div>
@@ -73,21 +83,20 @@ function ProjectCard({ project, index }) {
         </motion.div>
       </div>
 
-      {/* Stack tags */}
       <div className="flex flex-wrap gap-2 mt-3">
-        {project.stack.map(tech => (
+        {project.stack.map((tech) => (
           <span key={tech} className="font-mono text-[9px] text-silver/30 border border-white/5 px-2 py-0.5 tracking-wide">
             {tech}
           </span>
         ))}
       </div>
-    </motion.div>
+    </motion.a>
   );
 }
 
 export default function ProjectsSection() {
   return (
-    <section id="work" className="py-32 md:py-40 bg-obsidian relative">
+    <section id="projects" className="py-32 md:py-40 bg-obsidian relative">
       {/* Ambient */}
       <div className="absolute bottom-0 left-0 w-[500px] h-[500px] rounded-full bg-ice/3 blur-[150px] pointer-events-none" />
 

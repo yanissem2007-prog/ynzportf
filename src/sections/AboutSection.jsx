@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useScrollReveal } from '../hooks/useScrollReveal';
+import aboutPhoto from '../assets/about-photo.jpg';
 
 const traits = [
   { icon: '⬡', label: 'Full Stack Development', desc: 'React, Node.js, databases and APIs.' },
@@ -42,13 +43,14 @@ export default function AboutSection() {
           >
             <div className="relative">
               <div className="aspect-[4/5] photo-placeholder border border-white/5 overflow-hidden">
-                {/* Replace with: <img src="/src/assets/about-photo.jpg" className="w-full h-full object-cover" /> */}
-                <div className="absolute inset-0 flex flex-col items-center justify-center gap-2">
-                  <span className="font-display text-7xl text-white/5">Y</span>
-                  <span className="font-mono text-xs text-white/10 tracking-widest">ABOUT PHOTO</span>
-                  <span className="font-mono text-[10px] text-white/5">about-photo.jpg</span>
-                </div>
+                <img
+                  src={aboutPhoto}
+                  alt="Yanis standing in an elevator for the about section portrait"
+                  className="absolute inset-0 h-full w-full object-cover object-center brightness-90 contrast-110 saturate-[0.8]"
+                  draggable="false"
+                />
                 <div className="absolute inset-0 bg-gradient-to-t from-void/60 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-br from-gold/8 via-transparent to-transparent mix-blend-screen" />
               </div>
 
               {/* Decorative corner elements */}
