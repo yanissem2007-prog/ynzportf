@@ -19,7 +19,19 @@
     color: #e8e4dc;
     font-family: 'DM Sans', sans-serif;
     overflow-x: hidden;
-    cursor: none;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    body { cursor: none; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
   }
 
   ::selection {

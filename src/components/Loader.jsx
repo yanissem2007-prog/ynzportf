@@ -97,7 +97,7 @@ export default function Loader({ onComplete }) {
                 transition={{ delay: 0.6, duration: 0.8 }}
               >
                 <span className="font-mono text-xs tracking-widest3 text-gold/60 uppercase">
-                  Junior Full Stack Developer
+                  Full Stack Web Developer
                 </span>
               </motion.div>
             )}

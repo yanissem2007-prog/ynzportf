@@ -1,25 +1,31 @@
-import React, { useEffect, useRef } from 'react';
-import { motion } from 'framer-motion';
-import { ArrowDown } from 'lucide-react';
-import heroCodeImage from '../assets/hero-code.png';
+import React, { useEffect, useRef, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ArrowDown, Github, Linkedin, Sparkles } from 'lucide-react';
+import { roles, contact } from '../data';
 
 const containerVariants = {
   hidden: {},
-  visible: { transition: { staggerChildren: 0.12, delayChildren: 0.3 } }
+  visible: { transition: { staggerChildren: 0.1, delayChildren: 0.2 } }
 };
 
 const lineVariant = {
-  hidden: { y: '110%', opacity: 0 },
-  visible: { y: '0%', opacity: 1, transition: { duration: 1, ease: [0.16, 1, 0.3, 1] } }
+  hidden: { y: '110%' },
+  visible: { y: '0%', transition: { duration: 1, ease: [0.16, 1, 0.3, 1] } }
 };
 
 const fadeUp = {
-  hidden: { opacity: 0, y: 30 },
+  hidden: { opacity: 0, y: 24 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } }
 };
 
 export default function HeroSection() {
   const heroRef = useRef(null);
+  const [roleIndex, setRoleIndex] = useState(0);
+
+  useEffect(() => {
+    const id = setInterval(() => setRoleIndex(i => (i + 1) % roles.length), 2400);
+    return () => clearInterval(id);
+  }, []);
 
   useEffect(() => {
     const el = heroRef.current;
@@ -29,20 +35,14 @@ export default function HeroSection() {
       const { width, height, left, top } = el.getBoundingClientRect();
       const x = (clientX - left - width / 2) / width;
       const y = (clientY - top - height / 2) / height;
-      el.style.setProperty('--mx', `${x * 20}px`);
-      el.style.setProperty('--my', `${y * 20}px`);
+      el.style.setProperty('--mx', `${x * 24}px`);
+      el.style.setProperty('--my', `${y * 24}px`);
     };
     el.addEventListener('mousemove', onMove);
     return () => el.removeEventListener('mousemove', onMove);
   }, []);
 
-  const scrollToWork = () => {
-    document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' });
-  };
-
-  const scrollToContact = () => {
-    document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
-  };
+  const scrollTo = (id) => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
 
   return (
     <section
@@ -51,69 +51,111 @@ export default function HeroSection() {
       className="relative min-h-screen flex flex-col justify-center overflow-hidden bg-void"
       style={{ '--mx': '0px', '--my': '0px' }}
     >
-      {/* Ambient background */}
+      {/* Animated aurora background */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-1/3 left-1/4 w-96 h-96 rounded-full bg-gold/4 blur-[120px]" />
-        <div className="absolute bottom-1/4 right-1/3 w-80 h-80 rounded-full bg-ice/3 blur-[100px]" />
+        <motion.div
+          className="absolute top-1/4 -left-20 w-[520px] h-[520px] rounded-full bg-gold/8 blur-[140px]"
+          animate={{ x: [0, 60, 0], y: [0, 40, 0] }}
+          transition={{ duration: 14, repeat: Infinity, ease: 'easeInOut' }}
+        />
+        <motion.div
+          className="absolute bottom-1/4 -right-10 w-[460px] h-[460px] rounded-full bg-ice/6 blur-[120px]"
+          animate={{ x: [0, -50, 0], y: [0, -30, 0] }}
+          transition={{ duration: 16, repeat: Infinity, ease: 'easeInOut' }}
+        />
+        <motion.div
+          className="absolute top-2/3 left-1/2 w-[380px] h-[380px] rounded-full bg-accent/8 blur-[110px]"
+          animate={{ x: [0, 30, -30, 0], y: [0, -20, 20, 0] }}
+          transition={{ duration: 18, repeat: Infinity, ease: 'easeInOut' }}
+        />
       </div>
 
-      {/* Grid lines */}
-      <div className="absolute inset-0 pointer-events-none opacity-[0.03]"
+      {/* Grid */}
+      <div className="absolute inset-0 pointer-events-none opacity-[0.035]"
         style={{
           backgroundImage: 'linear-gradient(rgba(201,169,110,1) 1px, transparent 1px), linear-gradient(90deg, rgba(201,169,110,1) 1px, transparent 1px)',
           backgroundSize: '80px 80px'
         }}
       />
 
+      {/* Floating orbs */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        {[...Array(6)].map((_, i) => (
+          <motion.span
+            key={i}
+            className="absolute w-1 h-1 rounded-full bg-gold/40"
+            style={{
+              top: `${15 + i * 12}%`,
+              left: `${10 + i * 14}%`,
+            }}
+            animate={{
+              y: [0, -30, 0],
+              opacity: [0.2, 0.8, 0.2],
+            }}
+            transition={{
+              duration: 4 + i,
+              repeat: Infinity,
+              ease: 'easeInOut',
+              delay: i * 0.4,
+            }}
+          />
+        ))}
+      </div>
+
       {/* Content */}
-      <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12 pt-32 pb-16">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-end">
+      <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12 pt-32 pb-20 w-full">
+        {/* Tag */}
+        <motion.div
+          initial={{ opacity: 0, y: -8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2, duration: 0.7 }}
+          className="flex items-center gap-3 mb-10"
+        >
+          <span className="relative flex h-2 w-2">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-gold/60 opacity-75" />
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-gold" />
+          </span>
+          <span className="font-mono text-[11px] text-gold/80 tracking-[0.3em] uppercase">
+            Available for Frontend Projects · 2026
+          </span>
+        </motion.div>
 
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-end">
           {/* Left: Typography */}
-          <div className="lg:col-span-7 xl:col-span-8">
-            {/* Tag line */}
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 4.2, duration: 0.7 }}
-              className="flex items-center gap-3 mb-8"
-            >
-              <span className="w-8 h-px bg-gold/60" />
-              <span className="font-mono text-xs text-gold/70 tracking-widest uppercase">
-                Portfolio 2025
-              </span>
-            </motion.div>
-
-            {/* Main heading */}
-            <motion.div
-              variants={containerVariants}
-              initial="hidden"
-              animate="visible"
-              style={{ transitionDelay: '4s' }}
-            >
+          <div className="lg:col-span-8">
+            <motion.div variants={containerVariants} initial="hidden" animate="visible">
               <div className="overflow-hidden mb-1">
                 <motion.h1
                   variants={lineVariant}
-                  className="font-display text-[22vw] sm:text-[18vw] md:text-[15vw] lg:text-[13vw] leading-[0.85] text-pearl tracking-tight"
+                  className="font-display text-[22vw] sm:text-[18vw] md:text-[15vw] lg:text-[13vw] leading-[0.82] text-pearl tracking-tight"
+                  style={{ transform: 'translate3d(calc(var(--mx) * -0.4), calc(var(--my) * -0.3), 0)' }}
                 >
                   YANIS
                 </motion.h1>
               </div>
               <div className="overflow-hidden">
-                <motion.p
+                <motion.div
                   variants={lineVariant}
-                  className="font-display text-[6vw] sm:text-[5vw] md:text-4xl lg:text-5xl leading-tight text-silver/50 tracking-widest mt-2"
+                  className="flex items-baseline gap-3 flex-wrap mt-3"
                 >
-                  JUNIOR FULL STACK
-                </motion.p>
-              </div>
-              <div className="overflow-hidden">
-                <motion.p
-                  variants={lineVariant}
-                  className="font-display text-[6vw] sm:text-[5vw] md:text-4xl lg:text-5xl leading-tight text-gold/70 tracking-widest"
-                >
-                  DEVELOPER
-                </motion.p>
+                  <span className="font-display text-[6vw] sm:text-[5vw] md:text-4xl lg:text-5xl leading-tight text-silver/40 tracking-widest">
+                    I'M A
+                  </span>
+                  <span className="relative inline-block min-w-[260px] md:min-w-[480px]">
+                    <AnimatePresence mode="wait">
+                      <motion.span
+                        key={roles[roleIndex]}
+                        initial={{ y: 30, opacity: 0, filter: 'blur(8px)' }}
+                        animate={{ y: 0, opacity: 1, filter: 'blur(0px)' }}
+                        exit={{ y: -30, opacity: 0, filter: 'blur(8px)' }}
+                        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                        className="inline-block font-display text-[6vw] sm:text-[5vw] md:text-4xl lg:text-5xl leading-tight text-gold tracking-widest"
+                      >
+                        {roles[roleIndex].toUpperCase()}
+                      </motion.span>
+                    </AnimatePresence>
+                  </span>
+                </motion.div>
               </div>
             </motion.div>
 
@@ -122,88 +164,108 @@ export default function HeroSection() {
               variants={fadeUp}
               initial="hidden"
               animate="visible"
-              transition={{ delay: 4.8 }}
-              className="mt-8 max-w-md font-body text-sm md:text-base text-silver/50 leading-relaxed"
+              transition={{ delay: 0.9 }}
+              className="mt-10 max-w-xl font-body text-base md:text-lg text-silver/55 leading-relaxed"
             >
-              18-year-old developer blending code, motion, creativity and digital identity
-              into immersive modern experiences.
+              Full Stack Web Developer building <span className="text-pearl">production-grade applications</span> end-to-end —
+              type-safe React on the front, secure Node APIs and Postgres on the back,
+              motion-rich and unmistakably premium.
             </motion.p>
 
-            {/* CTAs */}
+            {/* CTAs + socials */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 5.1, duration: 0.7 }}
-              className="flex flex-wrap gap-4 mt-10"
+              transition={{ delay: 1.15, duration: 0.7 }}
+              className="flex flex-wrap items-center gap-4 mt-10"
             >
               <button
-                onClick={scrollToWork}
-                className="group relative overflow-hidden px-8 py-3.5 bg-pearl text-void font-body text-sm font-medium tracking-wide hover:bg-gold transition-colors duration-500"
+                onClick={() => scrollTo('projects')}
+                className="group relative overflow-hidden px-7 py-3.5 bg-pearl text-void font-body text-sm font-medium tracking-wide transition-colors duration-500"
+                data-hover
               >
-                <span className="relative z-10">View My Work</span>
+                <span className="relative z-10 inline-flex items-center gap-2">
+                  <Sparkles size={14} className="opacity-70" />
+                  View My Work
+                </span>
+                <span className="absolute inset-0 bg-gold translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out" />
               </button>
+
               <button
-                onClick={scrollToContact}
-                className="group px-8 py-3.5 border border-silver/20 hover:border-gold/60 font-body text-sm text-silver/70 hover:text-pearl tracking-wide transition-all duration-500"
+                onClick={() => scrollTo('contact')}
+                className="group relative px-7 py-3.5 border border-silver/20 hover:border-gold/60 font-body text-sm text-silver/80 hover:text-pearl tracking-wide transition-all duration-500"
+                data-hover
               >
-                Contact Me
-                <span className="ml-2 opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+                <span className="inline-flex items-center gap-2">
+                  Let's Talk
+                  <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
+                </span>
               </button>
+
+              {/* Social icons */}
+              <div className="flex items-center gap-2 ml-1">
+                <SocialIcon href={contact.linkedin} icon={Linkedin} label="LinkedIn" />
+                <SocialIcon href={contact.github} icon={Github} label="GitHub" />
+              </div>
             </motion.div>
           </div>
 
-          {/* Right: Photo + stats */}
-          <div className="lg:col-span-5 xl:col-span-4 mt-12 lg:mt-0">
+          {/* Right: Visual card */}
+          <div className="lg:col-span-4 hidden lg:block">
             <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 4.6, duration: 1, ease: [0.16, 1, 0.3, 1] }}
+              initial={{ opacity: 0, x: 30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.9, duration: 1, ease: [0.16, 1, 0.3, 1] }}
               className="relative"
+              style={{ transform: 'translate3d(calc(var(--mx) * 0.3), calc(var(--my) * 0.3), 0)' }}
             >
-              {/* Photo */}
-              <div className="relative aspect-[3/4] photo-placeholder border border-white/5 overflow-hidden"
-                style={{ transform: 'translate(calc(var(--mx) * 0.3), calc(var(--my) * 0.3))' }}
-              >
-                <img
-                  src={heroCodeImage}
-                  alt="Code editor screenshot showcasing a contact form implementation"
-                  className="absolute inset-0 h-full w-full object-cover object-left-top scale-[1.42] brightness-90 contrast-125 saturate-[0.75]"
-                  draggable="false"
-                />
-                {/* Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-void/80 via-transparent to-void/20" />
-                <div className="absolute inset-0 bg-gradient-to-br from-gold/10 via-transparent to-transparent mix-blend-screen" />
-                <div className="absolute bottom-4 left-4 right-4">
-                  <p className="font-mono text-[10px] text-gold/60 tracking-widest">
-                    YANIS / 18 / ALGIERS
-                  </p>
+              <div className="relative aspect-[3/4] border border-white/8 overflow-hidden bg-charcoal/40 backdrop-blur-sm">
+                {/* Code window header */}
+                <div className="flex items-center justify-between border-b border-white/5 px-4 py-2.5">
+                  <div className="flex gap-1.5">
+                    <span className="w-2.5 h-2.5 rounded-full bg-red-400/50" />
+                    <span className="w-2.5 h-2.5 rounded-full bg-yellow-400/50" />
+                    <span className="w-2.5 h-2.5 rounded-full bg-green-400/50" />
+                  </div>
+                  <span className="font-mono text-[9px] text-silver/30 tracking-widest">portfolio.tsx</span>
+                </div>
+
+                {/* Code lines */}
+                <div className="p-5 font-mono text-[11px] leading-loose space-y-1">
+                  <Line><span className="text-rose-300/70">const</span> <span className="text-gold/90">yanis</span> <span className="text-silver/40">=</span> <span className="text-silver/40">{'{'}</span></Line>
+                  <Line delay={0.1}>  <span className="text-ice/80">role</span><span className="text-silver/40">:</span> <span className="text-emerald-300/70">'Full Stack Dev'</span><span className="text-silver/40">,</span></Line>
+                  <Line delay={0.2}>  <span className="text-ice/80">frontend</span><span className="text-silver/40">:</span> <span className="text-silver/40">[</span><span className="text-emerald-300/70">'React'</span><span className="text-silver/40">,</span> <span className="text-emerald-300/70">'Next'</span><span className="text-silver/40">],</span></Line>
+                  <Line delay={0.3}>  <span className="text-ice/80">backend</span><span className="text-silver/40">:</span> <span className="text-silver/40">[</span><span className="text-emerald-300/70">'Node'</span><span className="text-silver/40">,</span> <span className="text-emerald-300/70">'Prisma'</span><span className="text-silver/40">],</span></Line>
+                  <Line delay={0.4}>  <span className="text-ice/80">db</span><span className="text-silver/40">:</span> <span className="text-emerald-300/70">'PostgreSQL'</span><span className="text-silver/40">,</span></Line>
+                  <Line delay={0.5}>  <span className="text-ice/80">deploy</span><span className="text-silver/40">:</span> <span className="text-emerald-300/70">'Vercel'</span><span className="text-silver/40">,</span></Line>
+                  <Line delay={0.6}>  <span className="text-ice/80">passion</span><span className="text-silver/40">:</span> <span className="text-amber-200/80">Infinity</span></Line>
+                  <Line delay={0.7}><span className="text-silver/40">{'}'}</span></Line>
+                </div>
+
+                {/* Gradient overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-void/70 via-transparent to-transparent pointer-events-none" />
+
+                {/* Corner */}
+                <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between">
+                  <span className="font-mono text-[9px] text-gold/60 tracking-widest">EST. 2022</span>
+                  <span className="font-mono text-[9px] text-silver/30 tracking-widest">ALGIERS · DZ</span>
                 </div>
               </div>
 
-              {/* Floating badge */}
+              {/* Floating tags */}
               <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 5.2, duration: 0.7 }}
-                className="absolute -left-6 top-1/4 bg-charcoal border border-white/8 px-4 py-3 hidden lg:block"
+                animate={{ y: [0, -8, 0] }}
+                transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+                className="absolute -left-5 top-12 bg-void/90 backdrop-blur border border-white/10 px-3 py-2"
               >
-                <p className="font-mono text-[10px] text-gold/60 tracking-widest">STACK</p>
-                <p className="font-display text-xl text-pearl mt-0.5">REACT</p>
+                <p className="font-mono text-[9px] text-gold/70 tracking-widest">REACT · TS</p>
               </motion.div>
-
-              {/* Stats */}
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 5.4, duration: 0.7 }}
-                className="absolute -bottom-6 -left-4 md:-left-8 flex gap-px hidden sm:flex"
+                animate={{ y: [0, 8, 0] }}
+                transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut', delay: 0.4 }}
+                className="absolute -right-4 bottom-20 bg-void/90 backdrop-blur border border-gold/30 px-3 py-2"
               >
-                {[['10+', 'Projects'], ['2+', 'Years Dev'], ['18', 'Years Old']].map(([val, label]) => (
-                  <div key={label} className="bg-charcoal/90 backdrop-blur border border-white/6 px-4 py-3">
-                    <p className="font-display text-2xl text-gold">{val}</p>
-                    <p className="font-mono text-[9px] text-silver/40 tracking-widest mt-0.5">{label}</p>
-                  </div>
-                ))}
+                <p className="font-mono text-[9px] text-gold/80 tracking-widest">MOTION</p>
               </motion.div>
             </motion.div>
           </div>
@@ -211,34 +273,56 @@ export default function HeroSection() {
       </div>
 
       {/* Scroll indicator */}
-      <motion.div
+      <motion.button
+        onClick={() => scrollTo('about')}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 5.5, duration: 0.8 }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
+        transition={{ delay: 1.6, duration: 0.8 }}
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 group"
+        aria-label="Scroll down"
+        data-hover
       >
-        <motion.div
-          animate={{ y: [0, 8, 0] }}
-          transition={{ repeat: Infinity, duration: 2, ease: 'easeInOut' }}
-        >
-          <ArrowDown size={14} className="text-gold/40" />
+        <span className="font-mono text-[9px] text-silver/40 tracking-widest group-hover:text-gold/80 transition-colors">SCROLL</span>
+        <motion.div animate={{ y: [0, 6, 0] }} transition={{ repeat: Infinity, duration: 1.8 }}>
+          <ArrowDown size={14} className="text-gold/50 group-hover:text-gold transition-colors" />
         </motion.div>
-        <span className="font-mono text-[9px] text-silver/30 tracking-widest rotate-90 origin-center hidden md:block">
-          SCROLL
-        </span>
-      </motion.div>
+      </motion.button>
 
       {/* Right edge label */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 5.6, duration: 0.8 }}
-        className="absolute right-6 top-1/2 -translate-y-1/2 hidden xl:flex flex-col items-center gap-6"
-      >
-        <span className="font-mono text-[9px] text-silver/20 tracking-widest [writing-mode:vertical-rl]">
-          FULL STACK DEVELOPER — SWING TRADER
+      <div className="absolute right-6 top-1/2 -translate-y-1/2 hidden xl:flex flex-col items-center gap-6">
+        <span className="font-mono text-[9px] text-silver/25 tracking-widest [writing-mode:vertical-rl]">
+          FRONTEND · UI / UX · MOTION DESIGN
         </span>
-      </motion.div>
+      </div>
     </section>
+  );
+}
+
+function Line({ children, delay = 0 }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, x: -8 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ delay: 1.2 + delay, duration: 0.4 }}
+      className="whitespace-nowrap"
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+function SocialIcon({ href, icon: Icon, label }) {
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noreferrer"
+      aria-label={label}
+      className="group relative w-11 h-11 flex items-center justify-center border border-silver/15 hover:border-gold/60 transition-all duration-500 overflow-hidden"
+      data-hover
+    >
+      <span className="absolute inset-0 bg-gold/10 translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
+      <Icon size={16} className="relative text-silver/70 group-hover:text-gold transition-colors" />
+    </a>
   );
 }
