@@ -1,7 +1,9 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { motion, AnimatePresence, LayoutGroup } from 'framer-motion';
 import { ArrowUpRight, ExternalLink, Github, Star, Server, Cpu, Database } from 'lucide-react';
 import { projects, projectCategories } from '../data';
+import WorkFeatured from '../components/WorkFeatured';
+import WorkCaseStudy from '../components/WorkCaseStudy';
 
 function ProjectFallback({ project }) {
   return (
@@ -180,11 +182,32 @@ function ProjectCard({ project, index, featured }) {
 
 export default function ProjectsSection() {
   const [filter, setFilter] = useState('All');
+  const [caseOpen, setCaseOpen] = useState(false);
 
   const filtered = useMemo(
     () => filter === 'All' ? projects : projects.filter(p => p.category === filter),
     [filter]
   );
+
+  const openCase = () => {
+    setCaseOpen(true);
+    if (typeof window !== 'undefined' && window.history?.replaceState) {
+      window.history.replaceState(null, '', '#work');
+    }
+  };
+  const closeCase = () => {
+    setCaseOpen(false);
+    if (typeof window !== 'undefined' && window.history?.replaceState) {
+      window.history.replaceState(null, '', '#projects');
+    }
+  };
+
+  useEffect(() => {
+    const sync = () => setCaseOpen(window.location.hash === '#work');
+    sync();
+    window.addEventListener('hashchange', sync);
+    return () => window.removeEventListener('hashchange', sync);
+  }, []);
 
   return (
     <section id="projects" className="py-32 md:py-40 bg-obsidian relative overflow-hidden">
@@ -192,27 +215,42 @@ export default function ProjectsSection() {
       <div className="absolute top-0 right-1/4 w-[400px] h-[400px] rounded-full bg-gold/4 blur-[140px] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-6 md:px-12">
-        <div className="flex flex-col md:flex-row items-start md:items-end justify-between gap-8 mb-12">
+        {/* Section opener */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+          className="mb-12"
+        >
+          <div className="flex items-center gap-4 mb-6">
+            <span className="font-mono text-xs text-gold/60 tracking-widest">03 / SELECTED WORK</span>
+            <span className="w-12 h-px bg-white/8" />
+          </div>
+          <h2 className="font-display text-6xl md:text-8xl lg:text-9xl text-pearl leading-[0.9] tracking-tight">SHIPPED</h2>
+          <h2 className="font-display text-6xl md:text-8xl lg:text-9xl text-gold/70 leading-[0.9] tracking-tight">PROJECTS</h2>
+        </motion.div>
+
+        {/* FLAGSHIP — WORK */}
+        <WorkFeatured onOpen={openCase} />
+
+        {/* Sub-header for the rest */}
+        <div className="flex flex-col md:flex-row items-start md:items-end justify-between gap-6 mb-8 pt-8 border-t border-white/5">
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
+            transition={{ duration: 0.7 }}
           >
-            <div className="flex items-center gap-4 mb-6">
-              <span className="font-mono text-xs text-gold/60 tracking-widest">03 / SELECTED WORK</span>
-              <span className="w-12 h-px bg-white/8" />
-            </div>
-            <h2 className="font-display text-6xl md:text-8xl lg:text-9xl text-pearl leading-[0.9] tracking-tight">SHIPPED</h2>
-            <h2 className="font-display text-6xl md:text-8xl lg:text-9xl text-gold/70 leading-[0.9] tracking-tight">PROJECTS</h2>
+            <p className="font-mono text-[10px] text-gold/50 tracking-widest mb-2">// MORE WORK</p>
+            <p className="font-display text-3xl md:text-4xl text-pearl tracking-tight">Recent client &amp; product builds</p>
           </motion.div>
-
           <motion.p
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            transition={{ delay: 0.3, duration: 0.8 }}
-            className="font-body text-sm md:text-base text-silver/40 max-w-sm md:text-right leading-relaxed"
+            transition={{ delay: 0.2, duration: 0.7 }}
+            className="font-body text-sm text-silver/40 max-w-sm md:text-right leading-relaxed"
           >
             <span className="text-pearl/80">Production-grade builds</span> spanning marketing
             sites, full-stack platforms and motion-rich identity systems.
@@ -293,6 +331,8 @@ export default function ProjectsSection() {
           </a>
         </motion.div>
       </div>
+
+      <WorkCaseStudy open={caseOpen} onClose={closeCase} />
     </section>
   );
 }

@@ -9,10 +9,9 @@ export default function Loader({ onComplete }) {
   useEffect(() => {
     if (startedRef.current) return;
     startedRef.current = true;
-    const t1 = setTimeout(() => setPhase(1), 900);
-    const t2 = setTimeout(() => setPhase(2), 2800);
-    const t3 = setTimeout(() => onComplete(), 3800);
-    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
+    setTimeout(() => setPhase(1), 900);
+    setTimeout(() => setPhase(2), 2800);
+    setTimeout(() => onComplete(), 3800);
   }, [onComplete]);
 
   const letters = ['Y', 'A', 'N', 'I', 'S'];
@@ -139,7 +138,6 @@ function CounterNumber() {
       if (n >= 100) { setCount(100); clearInterval(interval); }
       else setCount(n);
     }, 60);
-    return () => clearInterval(interval);
   }, []);
 
   return (

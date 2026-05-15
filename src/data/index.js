@@ -93,6 +93,80 @@ export const projects = [
 
 export const projectCategories = ["All", "Full Stack", "Frontend", "UI/UX"];
 
+export const work = {
+  id: "work",
+  name: "WORK",
+  tagline: "Reinventing how teams build and organize work",
+  status: "In Development · 2026",
+  flag: "FLAGSHIP FULL-STACK PROJECT",
+  intro: "A futuristic full-stack platform combining a professional social network, recruitment hub, student ecosystem, AI assistant and communities — built around speed, identity and craft.",
+  problem: "Today's professional tools are fragmented — LinkedIn for networking, separate job boards for hiring, scattered Discords for community, and disconnected AI tools. Students and early-career builders pay the price: noise, friction, and no single place to grow.",
+  solution: "WORK unifies the entire professional journey into one cinematic workspace. Network, get hired, learn, collaborate and build your CV — with an AI assistant woven through every surface.",
+  vision: "A next-gen workspace where individuals, students, recruiters and communities meet. Premium-feeling, mobile-first, real-time, and engineered to scale.",
+  features: [
+    {
+      title: "Professional Social Network",
+      desc: "A focused feed for builders — posts, threads, follows, friends and reputation, designed for signal over noise.",
+      icon: "Users",
+    },
+    {
+      title: "Recruitment Platform",
+      desc: "Jobs, applications, student & recruiter accounts. Smart matching, status tracking and a clean candidate pipeline.",
+      icon: "Briefcase",
+    },
+    {
+      title: "AI-Assisted Workflows",
+      desc: "Native assistant for CV writing, job search, profile coaching, post drafting and instant Q&A across the platform.",
+      icon: "Sparkles",
+    },
+    {
+      title: "CV Builder",
+      desc: "Composable, beautifully typeset CV templates. Live preview, PDF export, AI-suggested phrasing.",
+      icon: "FileText",
+    },
+    {
+      title: "Communities & Group Chats",
+      desc: "Topic-based communities with moderation tools, channels, threads, and real-time group conversations.",
+      icon: "MessageCircle",
+    },
+    {
+      title: "Real-Time Messaging",
+      desc: "1:1 DMs, group chats, typing indicators, read receipts, presence — built on Socket.io with optimistic UX.",
+      icon: "Zap",
+    },
+    {
+      title: "Notifications System",
+      desc: "Real-time, granular and persisted. In-app, email and push-ready architecture with per-channel preferences.",
+      icon: "Bell",
+    },
+    {
+      title: "Identity & Auth",
+      desc: "Email + Google + GitHub OAuth via JWT, role-based access (student / recruiter / admin), session security.",
+      icon: "Shield",
+    },
+  ],
+  stack: {
+    frontend: ["Next.js", "TypeScript", "TailwindCSS", "shadcn/ui", "Framer Motion", "GSAP", "Three.js", "Lenis", "Zustand"],
+    backend: ["Node.js", "Express.js", "Socket.io", "REST APIs", "JWT", "OAuth (Google · GitHub)"],
+    data: ["MongoDB", "Mongoose", "Cloudinary (media)"],
+    infra: ["Vercel", "CI/CD", "Edge caching", "Rate limiting"],
+  },
+  pillars: [
+    { label: "Cinematic UX",      desc: "Motion-rich, opinionated, premium across every surface." },
+    { label: "Real-time core",    desc: "Socket.io for presence, chat, notifications and live updates." },
+    { label: "Mobile-first",      desc: "Designed for thumbs. Every interaction works flawlessly on phone." },
+    { label: "Scalable backend",  desc: "Modular services, validation at boundaries, schema-driven." },
+    { label: "AI woven in",       desc: "Assistance lives where the work happens — not in a separate tab." },
+    { label: "Identity-driven",   desc: "Personal brand surfaces in feed, CV, profile and communities." },
+  ],
+  inspirations: ["LinkedIn", "Twitter / X", "Discord", "Apple", "Framer", "Linear", "Stripe"],
+  links: {
+    case: "#work",
+    repo: "https://github.com/yanissem2007-prog",
+    live: null,
+  },
+};
+
 export const skillStacks = [
   {
     label: "Frontend",

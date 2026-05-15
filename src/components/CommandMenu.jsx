@@ -16,6 +16,7 @@ export default function CommandMenu() {
     { id: 'home',     group: 'Navigate', label: 'Home',     icon: Home,          shortcut: 'G H', run: () => scrollTo('hero') },
     { id: 'about',    group: 'Navigate', label: 'About',    icon: User,          shortcut: 'G A', run: () => scrollTo('about') },
     { id: 'projects', group: 'Navigate', label: 'Projects', icon: Briefcase,     shortcut: 'G P', run: () => scrollTo('projects') },
+    { id: 'work',     group: 'Navigate', label: 'WORK · Case Study', icon: Briefcase, shortcut: 'G W', run: () => { setOpen(false); window.location.hash = '#work'; } },
     { id: 'skills',   group: 'Navigate', label: 'Skills',   icon: Layers,        shortcut: 'G S', run: () => scrollTo('skills') },
     { id: 'journey',  group: 'Navigate', label: 'Journey',  icon: GitCommit,     shortcut: 'G J', run: () => scrollTo('journey') },
     { id: 'contact',  group: 'Navigate', label: 'Contact',  icon: MessageSquare, shortcut: 'G C', run: () => scrollTo('contact') },
