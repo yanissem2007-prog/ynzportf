@@ -2,23 +2,36 @@ import React, { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowUpRight, Sparkles, Github, Linkedin, Star, Cpu, Database, Server } from 'lucide-react';
 import { work, contact } from '../data';
+import { useIsMobile } from '../hooks/useIsMobile';
 
 export default function WorkFeatured({ onOpen }) {
   const cardRef = useRef(null);
+  const isMobile = useIsMobile();
 
   useEffect(() => {
+    if (isMobile) return;
     const el = cardRef.current;
     if (!el) return;
+    let raf = 0;
+    let pending = null;
     const onMove = (e) => {
-      const r = el.getBoundingClientRect();
-      const x = ((e.clientX - r.left) / r.width) * 100;
-      const y = ((e.clientY - r.top) / r.height) * 100;
-      el.style.setProperty('--glow-x', `${x}%`);
-      el.style.setProperty('--glow-y', `${y}%`);
+      pending = e;
+      if (raf) return;
+      raf = requestAnimationFrame(() => {
+        const r = el.getBoundingClientRect();
+        const x = ((pending.clientX - r.left) / r.width) * 100;
+        const y = ((pending.clientY - r.top) / r.height) * 100;
+        el.style.setProperty('--glow-x', `${x}%`);
+        el.style.setProperty('--glow-y', `${y}%`);
+        raf = 0;
+      });
     };
     el.addEventListener('mousemove', onMove);
-    return () => el.removeEventListener('mousemove', onMove);
-  }, []);
+    return () => {
+      el.removeEventListener('mousemove', onMove);
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, [isMobile]);
 
   return (
     <motion.div
@@ -53,19 +66,21 @@ export default function WorkFeatured({ onOpen }) {
           }}
         />
 
-        {/* Animated gradient frame */}
-        <div aria-hidden className="absolute inset-0 pointer-events-none">
-          <motion.div
-            className="absolute -inset-[1px] opacity-40"
-            style={{
-              background:
-                'conic-gradient(from 0deg, transparent 0deg, rgba(201,169,110,0.4) 60deg, transparent 120deg, transparent 240deg, rgba(168,181,196,0.3) 300deg, transparent 360deg)',
-            }}
-            animate={{ rotate: 360 }}
-            transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
-          />
-          <div className="absolute inset-[1px] bg-obsidian" />
-        </div>
+        {/* Animated gradient frame — desktop only */}
+        {!isMobile && (
+          <div aria-hidden className="absolute inset-0 pointer-events-none">
+            <motion.div
+              className="absolute -inset-[1px] opacity-40"
+              style={{
+                background:
+                  'conic-gradient(from 0deg, transparent 0deg, rgba(201,169,110,0.4) 60deg, transparent 120deg, transparent 240deg, rgba(168,181,196,0.3) 300deg, transparent 360deg)',
+              }}
+              animate={{ rotate: 360 }}
+              transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
+            />
+            <div className="absolute inset-[1px] bg-obsidian" />
+          </div>
+        )}
 
         {/* Grid pattern */}
         <div
@@ -78,18 +93,27 @@ export default function WorkFeatured({ onOpen }) {
           }}
         />
 
-        {/* Aurora blobs */}
+        {/* Aurora blobs — animated on desktop, static on mobile */}
         <div aria-hidden className="absolute inset-0 pointer-events-none overflow-hidden">
-          <motion.div
-            className="absolute -top-32 -left-20 w-[480px] h-[480px] rounded-full bg-gold/12 blur-[140px]"
-            animate={{ x: [0, 40, 0], y: [0, 30, 0] }}
-            transition={{ duration: 14, repeat: Infinity, ease: 'easeInOut' }}
-          />
-          <motion.div
-            className="absolute -bottom-24 -right-20 w-[420px] h-[420px] rounded-full bg-ice/10 blur-[120px]"
-            animate={{ x: [0, -30, 0], y: [0, -20, 0] }}
-            transition={{ duration: 16, repeat: Infinity, ease: 'easeInOut' }}
-          />
+          {isMobile ? (
+            <>
+              <div className="absolute -top-20 -left-10 w-72 h-72 rounded-full bg-gold/12 blur-[70px]" />
+              <div className="absolute -bottom-20 -right-10 w-64 h-64 rounded-full bg-ice/10 blur-[60px]" />
+            </>
+          ) : (
+            <>
+              <motion.div
+                className="absolute -top-32 -left-20 w-[480px] h-[480px] rounded-full bg-gold/12 blur-[140px]"
+                animate={{ x: [0, 40, 0], y: [0, 30, 0] }}
+                transition={{ duration: 14, repeat: Infinity, ease: 'easeInOut' }}
+              />
+              <motion.div
+                className="absolute -bottom-24 -right-20 w-[420px] h-[420px] rounded-full bg-ice/10 blur-[120px]"
+                animate={{ x: [0, -30, 0], y: [0, -20, 0] }}
+                transition={{ duration: 16, repeat: Infinity, ease: 'easeInOut' }}
+              />
+            </>
+          )}
         </div>
 
         {/* Content */}
@@ -233,6 +257,15 @@ export default function WorkFeatured({ onOpen }) {
 }
 
 function SkeletonRow({ w, delay }) {
+  const isMobile = useIsMobile();
+  if (isMobile) {
+    return (
+      <div
+        className="h-2 origin-left bg-gradient-to-r from-gold/30 via-silver/15 to-transparent"
+        style={{ width: w }}
+      />
+    );
+  }
   return (
     <motion.div
       initial={{ opacity: 0.2, scaleX: 0.6 }}

@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowDown, Github, Linkedin, Sparkles } from 'lucide-react';
 import { roles, contact } from '../data';
+import { useIsMobile } from '../hooks/useIsMobile';
 
 const containerVariants = {
   hidden: {},
@@ -21,6 +22,7 @@ const fadeUp = {
 export default function HeroSection() {
   const heroRef = useRef(null);
   const [roleIndex, setRoleIndex] = useState(0);
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     const id = setInterval(() => setRoleIndex(i => (i + 1) % roles.length), 2400);
@@ -28,19 +30,30 @@ export default function HeroSection() {
   }, []);
 
   useEffect(() => {
+    if (isMobile) return;
     const el = heroRef.current;
     if (!el) return;
+    let raf = 0;
+    let pending = null;
     const onMove = (e) => {
-      const { clientX, clientY } = e;
-      const { width, height, left, top } = el.getBoundingClientRect();
-      const x = (clientX - left - width / 2) / width;
-      const y = (clientY - top - height / 2) / height;
-      el.style.setProperty('--mx', `${x * 24}px`);
-      el.style.setProperty('--my', `${y * 24}px`);
+      pending = e;
+      if (raf) return;
+      raf = requestAnimationFrame(() => {
+        const { clientX, clientY } = pending;
+        const { width, height, left, top } = el.getBoundingClientRect();
+        const x = (clientX - left - width / 2) / width;
+        const y = (clientY - top - height / 2) / height;
+        el.style.setProperty('--mx', `${x * 24}px`);
+        el.style.setProperty('--my', `${y * 24}px`);
+        raf = 0;
+      });
     };
     el.addEventListener('mousemove', onMove);
-    return () => el.removeEventListener('mousemove', onMove);
-  }, []);
+    return () => {
+      el.removeEventListener('mousemove', onMove);
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, [isMobile]);
 
   const scrollTo = (id) => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
 
@@ -51,23 +64,32 @@ export default function HeroSection() {
       className="relative min-h-screen flex flex-col justify-center overflow-hidden bg-void"
       style={{ '--mx': '0px', '--my': '0px' }}
     >
-      {/* Animated aurora background */}
+      {/* Aurora background — animated on desktop, static on mobile */}
       <div className="absolute inset-0 pointer-events-none">
-        <motion.div
-          className="absolute top-1/4 -left-20 w-[520px] h-[520px] rounded-full bg-gold/8 blur-[140px]"
-          animate={{ x: [0, 60, 0], y: [0, 40, 0] }}
-          transition={{ duration: 14, repeat: Infinity, ease: 'easeInOut' }}
-        />
-        <motion.div
-          className="absolute bottom-1/4 -right-10 w-[460px] h-[460px] rounded-full bg-ice/6 blur-[120px]"
-          animate={{ x: [0, -50, 0], y: [0, -30, 0] }}
-          transition={{ duration: 16, repeat: Infinity, ease: 'easeInOut' }}
-        />
-        <motion.div
-          className="absolute top-2/3 left-1/2 w-[380px] h-[380px] rounded-full bg-accent/8 blur-[110px]"
-          animate={{ x: [0, 30, -30, 0], y: [0, -20, 20, 0] }}
-          transition={{ duration: 18, repeat: Infinity, ease: 'easeInOut' }}
-        />
+        {isMobile ? (
+          <>
+            <div className="absolute top-1/4 -left-10 w-72 h-72 rounded-full bg-gold/10 blur-[80px]" />
+            <div className="absolute bottom-1/4 -right-10 w-64 h-64 rounded-full bg-ice/8 blur-[70px]" />
+          </>
+        ) : (
+          <>
+            <motion.div
+              className="absolute top-1/4 -left-20 w-[520px] h-[520px] rounded-full bg-gold/8 blur-[140px]"
+              animate={{ x: [0, 60, 0], y: [0, 40, 0] }}
+              transition={{ duration: 14, repeat: Infinity, ease: 'easeInOut' }}
+            />
+            <motion.div
+              className="absolute bottom-1/4 -right-10 w-[460px] h-[460px] rounded-full bg-ice/6 blur-[120px]"
+              animate={{ x: [0, -50, 0], y: [0, -30, 0] }}
+              transition={{ duration: 16, repeat: Infinity, ease: 'easeInOut' }}
+            />
+            <motion.div
+              className="absolute top-2/3 left-1/2 w-[380px] h-[380px] rounded-full bg-accent/8 blur-[110px]"
+              animate={{ x: [0, 30, -30, 0], y: [0, -20, 20, 0] }}
+              transition={{ duration: 18, repeat: Infinity, ease: 'easeInOut' }}
+            />
+          </>
+        )}
       </div>
 
       {/* Grid */}
@@ -78,29 +100,25 @@ export default function HeroSection() {
         }}
       />
 
-      {/* Floating orbs */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        {[...Array(6)].map((_, i) => (
-          <motion.span
-            key={i}
-            className="absolute w-1 h-1 rounded-full bg-gold/40"
-            style={{
-              top: `${15 + i * 12}%`,
-              left: `${10 + i * 14}%`,
-            }}
-            animate={{
-              y: [0, -30, 0],
-              opacity: [0.2, 0.8, 0.2],
-            }}
-            transition={{
-              duration: 4 + i,
-              repeat: Infinity,
-              ease: 'easeInOut',
-              delay: i * 0.4,
-            }}
-          />
-        ))}
-      </div>
+      {/* Floating orbs — desktop only */}
+      {!isMobile && (
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          {[...Array(6)].map((_, i) => (
+            <motion.span
+              key={i}
+              className="absolute w-1 h-1 rounded-full bg-gold/40"
+              style={{ top: `${15 + i * 12}%`, left: `${10 + i * 14}%` }}
+              animate={{ y: [0, -30, 0], opacity: [0.2, 0.8, 0.2] }}
+              transition={{
+                duration: 4 + i,
+                repeat: Infinity,
+                ease: 'easeInOut',
+                delay: i * 0.4,
+              }}
+            />
+          ))}
+        </div>
+      )}
 
       {/* Content */}
       <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12 pt-32 pb-20 w-full">

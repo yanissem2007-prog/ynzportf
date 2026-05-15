@@ -202,3 +202,34 @@
 .mobile-menu-overlay.open {
   clip-path: circle(150% at calc(100% - 2rem) 2rem);
 }
+
+/* ───── Mobile performance overrides ───── */
+@media (max-width: 767px) {
+  /* Drop grain opacity — it repaints the whole viewport */
+  .grain { opacity: 0.018; }
+
+  /* Cap blur radius — 120-200px blurs murder mobile GPUs */
+  [class*="blur-[200px]"],
+  [class*="blur-[180px]"],
+  [class*="blur-[160px]"],
+  [class*="blur-[150px]"],
+  [class*="blur-[140px]"],
+  [class*="blur-[130px]"],
+  [class*="blur-[120px]"],
+  [class*="blur-[110px]"],
+  [class*="blur-[100px]"] {
+    filter: blur(60px) !important;
+  }
+
+  /* Lighten backdrop-blur which is expensive */
+  .backdrop-blur-xl { backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+  .backdrop-blur-md { backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
+
+  /* Promote sections that animate to their own layer — avoids paints */
+  section { transform: translateZ(0); }
+}
+
+/* Honor reduced motion globally on mobile too */
+@media (max-width: 767px) and (prefers-reduced-motion: no-preference) {
+  /* nothing extra */
+}

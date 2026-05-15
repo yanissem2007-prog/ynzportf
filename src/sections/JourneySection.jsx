@@ -1,6 +1,7 @@
 import React, { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { journey } from '../data';
+import { useIsMobile } from '../hooks/useIsMobile';
 
 function JourneyItem({ item, index, total }) {
   const isLast = index === total - 1;
@@ -43,6 +44,7 @@ function JourneyItem({ item, index, total }) {
 
 export default function JourneySection() {
   const ref = useRef(null);
+  const isMobile = useIsMobile();
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ['start end', 'end start']
@@ -55,10 +57,14 @@ export default function JourneySection() {
       ref={ref}
       className="py-32 md:py-40 bg-void relative overflow-hidden"
     >
-      <motion.div
-        style={{ y: bgY }}
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full bg-gold/4 blur-[200px] pointer-events-none"
-      />
+      {isMobile ? (
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 rounded-full bg-gold/5 blur-[80px] pointer-events-none" />
+      ) : (
+        <motion.div
+          style={{ y: bgY }}
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full bg-gold/4 blur-[200px] pointer-events-none"
+        />
+      )}
 
       <div className="max-w-7xl mx-auto px-6 md:px-12">
         {/* Header */}
