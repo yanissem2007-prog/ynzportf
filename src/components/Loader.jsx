@@ -1,11 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Loader({ onComplete }) {
   const [phase, setPhase] = useState(0);
+  const startedRef = useRef(false);
   // phase 0: counting, 1: reveal name, 2: exit
 
   useEffect(() => {
+    if (startedRef.current) return;
+    startedRef.current = true;
     const t1 = setTimeout(() => setPhase(1), 900);
     const t2 = setTimeout(() => setPhase(2), 2800);
     const t3 = setTimeout(() => onComplete(), 3800);
@@ -126,7 +129,10 @@ export default function Loader({ onComplete }) {
 
 function CounterNumber() {
   const [count, setCount] = useState(0);
+  const startedRef = useRef(false);
   useEffect(() => {
+    if (startedRef.current) return;
+    startedRef.current = true;
     let n = 0;
     const interval = setInterval(() => {
       n += Math.floor(Math.random() * 15) + 5;
